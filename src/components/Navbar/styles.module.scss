@@ -1,2 +1,25 @@
 @import "../../styles/variables";
 
+.__navbar {
+    display: flex;
+    gap: 4rem;
+    justify-content: center;
+    align-items: flex-end;
+
+
+        & .__logo {
+            text-align: center;
+
+            & .__bomb {
+                width: 5rem;
+                margin: 1rem;
+            }
+
+            & .__title {
+                font-family: 'Monoton', sans-serif;
+                font-size: 3rem;
+                line-height: 0.9;
+            }
+        }
+        
+}

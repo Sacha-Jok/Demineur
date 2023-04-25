@@ -1,7 +1,9 @@
+import Navbar from '../../components/Navbar';
+
 const Tuto = () => {
     return (
         <div>
-            Coucou
+            <Navbar />
         </div>
     );
 };
