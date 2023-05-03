@@ -2,10 +2,14 @@
 
 .__navbar {
     display: flex;
-    gap: 4rem;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
+    & .__container {
+        display: flex;
+        gap: 4rem;
+        justify-content: center;
+        align-items: flex-end;
 
         & .__logo {
             text-align: center;
@@ -17,9 +21,29 @@
 
             & .__title {
                 font-family: 'Monoton', sans-serif;
+                font-weight: 500;
                 font-size: 3rem;
                 line-height: 0.9;
             }
         }
-        
+
+        & .__subtitle {
+            font-family: 'Alegreya Sans SC', sans-serif;
+            font-weight: 300;
+            font-size: 1.7rem;
+            line-height: 0.9;
+            background: linear-gradient(currentColor, currentColor) bottom / 0 1px no-repeat;
+            transition: 0.5s background-size;
+            
+            &:hover {
+                background-size: 100% 1px;
+            }
+        }
+    }
+
+    & .__darkLogo {
+        position: absolute;
+        margin-right: 15px;
+        right: 0;
+    }
 }
