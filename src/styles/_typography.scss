@@ -6,9 +6,19 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    color: $primary-color;
-}
+    
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
 
-a {
-    text-decoration: none;
+    & .dark {
+        background-color: #333;
+        color: white;
+        & .logo {
+            filter: invert(88%) sepia(69%) saturate(48%) hue-rotate(57deg) brightness(110%) contrast(112%);
+        }
+    }
 }
+    
+
