@@ -10,8 +10,7 @@ const App = () => {
       <div className="App">
         <Router>
             <Routes>
-                <Route index element={<Play />} />
-                <Route exact path='play' element={<Play />} />
+                <Route exact path='/' element={<Play />} />
                 <Route exact path='tuto' element={<Tuto />} />
                 <Route exact path='leaderboard' element={<Leaderboard />} />
                 <Route path='*' element={<ErrorPage />} />
