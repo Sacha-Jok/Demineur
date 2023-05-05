@@ -1,0 +1,19 @@
+.__steps {
+    font-size: large;
+    justify-content: center;
+    margin: 6em auto;
+    width: 50em;
+    animation: slide 1s ;
+    animation-fill-mode:forwards;
+}
+
+@keyframes slide {
+    from{
+        transform: translateX(40px);
+        opacity: 0;
+    };
+    to{
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
