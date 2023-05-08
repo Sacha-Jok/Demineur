@@ -1,0 +1,9 @@
+[
+    {"id":0,"text":"Le jeu se déroule sur une grille carrée, généralement de taille variable, composée de cases."},
+    {"id":1,"text":"Certaines cases contiennent des mines et d'autres non. Le but du jeu est de découvrir toutes les cases qui ne contiennent pas de mines sans déclencher celles qui en contiennent."},
+    {"id":2,"text":"Au début du jeu, toutes les cases sont cachées. Le joueur peut cliquer sur une case pour la découvrir."},
+    {"id":3,"text":"Si la case cliquée ne contient pas de mine, elle révèle un chiffre indiquant le nombre de mines se trouvant dans les cases adjacentes (horizontalement, verticalement ou en diagonale) à cette case. Si la case ne touche aucune mine, elle est entourée de cases vides."},
+    {"id":4,"text":"Si la case cliquée contient une mine, le jeu est terminé et le joueur a perdu."},
+    {"id":5,"text":"Si le joueur pense qu'une case contient une mine, il peut cliquer dessus avec le bouton droit de la souris pour placer un drapeau ou un point d'interrogation pour marquer les cases suspectes."},
+    {"id":6,"text":"Si toutes les cases qui ne contiennent pas de mines sont découvertes, le joueur gagne la partie."}
+]
