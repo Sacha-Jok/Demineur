@@ -1,36 +1,33 @@
 @import "../../styles/variables";
 
-.__gameSection{
-    line-height: 25px;
-}
 .__buttons {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1em;
-    width: 10em;
+    justify-content: space-between;
+    align-items: center;
+    width: 550px;
+    margin: 3em 0;
     
     & .__button {
         background-color: $secondary-color;
+        color: $white;
         cursor: pointer;
         border: 2px;
         border-radius: 5px;
         font-weight: 500;
         height: 3em;
+        width: 10em;
         &:hover{
             background-color: $primary-color;
-            color: $white;
+            border:1px solid $white;
         }
     }
 }
 
 .__cases{
     display:inline-block;
-    margin:0;
-    padding:0;
     width:23px;
     height:23px;
+    margin: 1px;
     vertical-align:top;
-    border:1px solid #000;
     background-color:#ccc
 }
