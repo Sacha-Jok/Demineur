@@ -3,41 +3,35 @@
 .__navbar {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
+    gap: 5em;
 
-    & .__container {
-        display: flex;
-        gap: 4rem;
-        justify-content: center;
-        align-items: flex-end;
+    & .__logo {
+        text-align: center;
 
-        & .__logo {
-            text-align: center;
-
-            & .__bomb {
-                width: 5rem;
-                margin: 1rem;
-            }
-
-            & .__title {
-                font-family: 'Monoton', sans-serif;
-                font-weight: 500;
-                font-size: 3rem;
-                line-height: 0.9;
-            }
+        & .__bomb {
+            width: 5rem;
+            margin: 1rem;
         }
 
-        & .__subtitle {
-            font-family: 'Alegreya Sans SC', sans-serif;
-            font-weight: 300;
-            font-size: 1.7rem;
+        & .__title {
+            font-family: 'Monoton', sans-serif;
+            font-weight: 500;
+            font-size: 3rem;
             line-height: 0.9;
-            background: linear-gradient(currentColor, currentColor) bottom / 0 1px no-repeat;
-            transition: 0.5s background-size;
-            
-            &:hover {
-                background-size: 100% 1px;
-            }
+        }
+    }
+
+    & .__subtitle {
+        font-family: 'Alegreya Sans SC', sans-serif;
+        font-weight: 300;
+        font-size: 1.7rem;
+        line-height: 0.9;
+        background: linear-gradient(currentColor, currentColor) bottom / 0 1px no-repeat;
+        transition: 0.5s background-size;
+        
+        &:hover {
+            background-size: 100% 1px;
         }
     }
 
