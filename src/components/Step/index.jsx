@@ -5,7 +5,7 @@ const Step = () => {
   
   return (
     steps.map(stepInfo =>
-        <p className={styles.__step}>{stepInfo.text}</p>
+        <p key={stepInfo.id} className={styles.__step}>{stepInfo.text}</p>
     )
   );
 }
