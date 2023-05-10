@@ -1,17 +1,17 @@
 import styles from "./styles.module.scss";
 
+
 const Game = () => {
-  let lvl = '';
 
   const handleEasyClick = () => {start({caseNb:9,mineNb:10})};
   const handleMediumClick = () => {start({caseNb:16,mineNb:40})};
   const handleHardClick = () => {start({caseNb:22,mineNb:99})};
 
   const start = (value) => {
-    lvl = value
+    let lvl = value
     const caseNb = lvl.caseNb,dim = caseNb*caseNb,game = document.getElementById('gameSection');
-    game.style.width=caseNb*25+'px';
-    const mineNb = lvl.mineNb,nearMine = [], randoms = [];
+    game.style.width=caseNb*27+'px';
+    const mineNb = lvl.mineNb, randoms = [];
     game.innerHTML='';
     
     /*Création des grilles en fonction de la difficulté sélectionnée*/ 
@@ -29,11 +29,22 @@ const Game = () => {
         randoms.push(random)
       }
     }
-    randoms.map((e,i) => {
-      game.children[e].innerHTML = 'X'
-    })
-    console.log(randoms)
-   
+       
+    document.onclick = (e) => {
+      if (!e.target.id.startsWith('case')) return;
+      const divNumber = parseInt(e.target.id.substring(4));
+      console.log(randoms)
+      
+      if (randoms.includes(divNumber)){
+        randoms.map((e) => (
+          game.children[e].innerHTML = '💣'
+        ));
+        document.getElementById(e.target.id).style.backgroundColor = "red";
+        //alert('Vous avez perdu');
+      };
+      
+    }
+    
   };
 
   return (

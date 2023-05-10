@@ -23,11 +23,13 @@
     }
 }
 
-.__cases{
+.__cases {
     display:inline-block;
-    width:23px;
-    height:23px;
+    text-align: center;
+    line-height: 23px;
+    width:25px;
+    height:25px;
     margin: 1px;
     vertical-align:top;
-    background-color:#ccc
+    background-color:#ccc;
 }
