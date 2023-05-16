@@ -1,6 +1,5 @@
 import styles from "./styles.module.scss";
 
-
 const Game = () => {
 
   const handleEasyClick = () => {start({caseNb:9,mineNb:10})};
@@ -29,22 +28,42 @@ const Game = () => {
         randoms.push(random)
       }
     }
-       
+    
+    /*randoms.map((e) => (
+      game.children[e].innerHTML = '💣'
+    ));*/
+
     document.onclick = (e) => {
       if (!e.target.id.startsWith('case')) return;
       const divNumber = parseInt(e.target.id.substring(4));
-      console.log(randoms)
       
+      // Vérifier les 8 cases autour de la case cliquée
+      const indices = [-caseNb-1,-caseNb,-caseNb+1,-1,+1,+caseNb-1,+caseNb,+caseNb+1];
+      let count = 0;
+      for (let i = 0; i < indices.length; i++) {
+        const index = divNumber + indices[i];
+        // Vérifier que la case est valide (dans les limites de la grille)
+        if (index >= 0 && index < dim && Math.abs(divNumber%caseNb-index%caseNb)<2) {
+          // Vérifier si la case contient une mine
+          if (randoms.includes(index)) {
+            count++;
+          }
+        }
+      }
+
       if (randoms.includes(divNumber)){
         randoms.map((e) => (
           game.children[e].innerHTML = '💣'
         ));
         document.getElementById(e.target.id).style.backgroundColor = "red";
         //alert('Vous avez perdu');
+      } else if (count === 0) {
+          document.getElementById(e.target.id).style.backgroundColor = "white"
+
+      } else {
+        document.getElementById(e.target.id).innerHTML = count
       };
-      
-    }
-    
+    } 
   };
 
   return (
