@@ -1,11 +1,16 @@
 @import "../../styles/variables";
 
-.__buttons {
+.__container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    width: 550px;
-    margin: 3em 0;
+    
+    & .__buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 594px;
+        margin: 3em 0;
+    }
     
     & .__button {
         background-color: $secondary-color;
@@ -21,19 +26,35 @@
             border:1px solid $white;
         }
     }
+
+    & .__gameSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+
+        & #__replay {
+            background-color: $primary-color;
+            position: absolute;
+        
+        }
+        
+        & #__gameSection {
+    
+            & .__cases {
+                display:inline-block;
+                text-align: center;
+                line-height: 23px;
+                width:25px;
+                height:25px;
+                margin: 1px;
+                vertical-align:top;
+                background-color:#ccc;
+            }
+        }
+    }
 }
 
-.__cases {
-    display:inline-block;
-    text-align: center;
-    line-height: 23px;
-    width:25px;
-    height:25px;
-    margin: 1px;
-    vertical-align:top;
-    background-color:#ccc;
-}
 
-#gameSection {
-    color: black !important;
-}
+
