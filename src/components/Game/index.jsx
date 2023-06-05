@@ -6,7 +6,6 @@ const Game = () => {
 
   const [difficulty, setDifficulty] = useState('');
   const [visibility, setVisibility] = useState(false);
-  //const [flag, setFlag] = useState('');
 
   const game = document.getElementById(styles.__gameSection);
 
@@ -14,12 +13,6 @@ const Game = () => {
   const handleMediumClick = () => {setDifficulty({caseNb:16,mineNb:40})};
   const handleHardClick = () => {setDifficulty({caseNb:22,mineNb:99})};
   const handleReplayClick = () => {start(); setVisibility(false)};
-  const handleContextMenu = (e) => {
-    e.preventDefault();
-    if (document.getElementById(e.target.id).innerHTML === "") {
-      document.getElementById(e.target.id).innerHTML = "🚩";
-    }
-  };
 
   const start = () => {
     let lvl = difficulty;
@@ -27,7 +20,6 @@ const Game = () => {
     game.style.width = caseNb * 27 + 'px';
     const mineNb = lvl.mineNb, randoms = [];
     game.innerHTML = '';
-    game.addEventListener("contextmenu", handleContextMenu);
 
     /*Création des grilles en fonction de la difficulté sélectionnée*/
     for (let i = 0; i < dim; i++) {
@@ -51,6 +43,24 @@ const Game = () => {
       const divNumber = parseInt(e.target.id.substring(4));
       revealCase(divNumber, randoms, caseNb, dim);
     };
+
+    document.oncontextmenu = (e) => {
+      e.preventDefault();
+      if (!e.target.id.startsWith('case')) return;
+      setFlag(e);
+    };
+  }
+
+  const setFlag = (e) => {
+    const targetElement = document.getElementById(e.target.id);
+    const currentContent = targetElement.innerHTML;
+  
+    if (!currentContent.includes("🚩")) {
+      if (!currentContent) {targetElement.innerHTML = "🚩"}
+    } else {
+      targetElement.innerHTML = "";
+      ;
+    }
   };
 
   const revealCase = (divNumber, randoms, caseNb, dim) => {
