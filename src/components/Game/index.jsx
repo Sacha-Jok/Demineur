@@ -54,13 +54,7 @@ const Game = () => {
   const setFlag = (e) => {
     const targetElement = document.getElementById(e.target.id);
     const currentContent = targetElement.innerHTML;
-  
-    if (!currentContent.includes("🚩")) {
-      if (!currentContent) {targetElement.innerHTML = "🚩"}
-    } else {
-      targetElement.innerHTML = "";
-      ;
-    }
+    targetElement.innerHTML = !currentContent.includes("🚩") ? (!currentContent ? "🚩" : currentContent) : "";
   };
 
   const revealCase = (divNumber, randoms, caseNb, dim) => {
