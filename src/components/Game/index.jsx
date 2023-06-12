@@ -1,24 +1,30 @@
 import styles from "./styles.module.scss";
 import { useEffect, useState } from "react";
 
-
 const Game = () => {
 
   const [difficulty, setDifficulty] = useState('');
   const [visibility, setVisibility] = useState(false);
+  const [gridClick, setgridClick] = useState(true);
+
 
   const game = document.getElementById(styles.__gameSection);
 
   const handleEasyClick = () => {setDifficulty({caseNb:9,mineNb:10})};
   const handleMediumClick = () => {setDifficulty({caseNb:16,mineNb:40})};
   const handleHardClick = () => {setDifficulty({caseNb:22,mineNb:99})};
-  const handleReplayClick = () => {start(); setVisibility(false)};
+  const handleReplayClick = () => {
+    start(); 
+    setVisibility(false);
+    setgridClick(true);
+  };
 
+  let randoms = [];
   const start = () => {
     let lvl = difficulty;
     const caseNb = lvl.caseNb, dim = caseNb * caseNb;
     game.style.width = caseNb * 27 + 'px';
-    const mineNb = lvl.mineNb, randoms = [];
+    const mineNb = lvl.mineNb;
     game.innerHTML = '';
 
     /*Création des grilles en fonction de la difficulté sélectionnée*/
@@ -37,35 +43,87 @@ const Game = () => {
       }
     }
 
-    /*Ecoute du clic de l'utilisateur*/
-    document.onclick = (e) => {
-      if (!e.target.id.startsWith('case')) return;
-      const divNumber = parseInt(e.target.id.substring(4));
-      revealCase(divNumber, randoms, caseNb, dim);
-    };
+    console.log(randoms)
+    if (gridClick) {
+      /*Ecoute du clic de l'utilisateur*/
+      game.onclick = (e) => {
+        if (!e.target.id.startsWith('case')) return;
+        startTime();
+        const divNumber = parseInt(e.target.id.substring(4));
+        revealCase(divNumber, randoms, caseNb, dim);
+      };
 
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-      if (!e.target.id.startsWith('case')) return;
-      setFlag(e);
-    };
+      /* Detection clic droit pour ajouter le drapeau */
+      game.oncontextmenu = (e) => {
+        e.preventDefault();
+        if (!e.target.id.startsWith('case')) return;
+        setFlag(e);
+      };
+    }
   }
 
+  let sec = 0;
+  let min = 0;
+  let interval = '';
+  
+  const chrono = () => {
+    sec++;
+    if (sec === 60) {
+      min++;
+      sec=0;
+    };
+    document.getElementById("timer").innerHTML = (min ? (min + " : ") : "") + (sec < 10 ? "0" : "") + sec;
+  };
+  
+  const startTime = () => {
+    if (!interval) interval = setInterval(chrono, 1000);
+  };
+
+  const stopTime = () => {
+    clearInterval(interval);
+    interval = '';
+  };
+
+  /*Ajout des drapeaux au clic */
+  let flagNb = 0;
+  let flags = []
   const setFlag = (e) => {
     const targetElement = document.getElementById(e.target.id);
+    const flagDiv = parseInt(e.target.id.substring(4));
     const currentContent = targetElement.innerHTML;
-    targetElement.innerHTML = !currentContent.includes("🚩") ? (!currentContent ? "🚩" : currentContent) : "";
+    if (!currentContent.includes("🚩")) {
+      if (!currentContent) {
+        flagNb++;
+        flags.push(flagDiv);
+        checkWin();
+        targetElement.innerHTML = "🚩";
+      } else {targetElement.innerHTML = currentContent}
+    } else {
+      flagNb--;
+      flags.splice(flags.indexOf(flagDiv),1);
+      targetElement.innerHTML = "";
+    }
+    document.getElementById("flagNb").innerHTML = "💣 " + Math.max(difficulty.mineNb - flagNb, 0) 
   };
+
+  const checkWin = () => {
+    console.log(flags)
+    console.log(randoms)
+
+    if (randoms.every(e => {return flags.includes(e)})) {
+      stopTime()
+      alert("gagné")
+    }
+  }
 
   const revealCase = (divNumber, randoms, caseNb, dim) => {
     const indices = [-caseNb - 1, -caseNb, -caseNb + 1, -1, +1, +caseNb - 1, +caseNb, +caseNb + 1];
     let count = 0;
 
     if (randoms.includes(divNumber)) {
-      randoms.map((e) => (
-        game.children[e].innerHTML = '💣'
-      ));
+      randoms.map((e) => (game.children[e].innerHTML = '💣'));
       document.getElementById('case' + divNumber).style.backgroundColor = "red";
+      stopTime();
       setVisibility(true);
     } else {
       for (let i = 0; i < indices.length; i++) {
@@ -76,13 +134,7 @@ const Game = () => {
           }
         }
       }
-      if (count === 0) {
-        const caseElement = document.getElementById('case' + divNumber);
-        caseElement.style.innerHTML = '';
-        revealAdjacentEmptyCases(divNumber, randoms, caseNb, dim);
-      } else if (count > 0) {
-        document.getElementById('case' + divNumber).innerHTML = count;
-      }
+      (count === 0) ? revealAdjacentEmptyCases(divNumber, randoms, caseNb, dim) : document.getElementById('case' + divNumber).innerHTML = count;
     }
   };
 
@@ -127,17 +179,24 @@ const Game = () => {
   
   return (
     <>
-    <div className={styles.__container}>
-      <div className={styles.__buttons}>
-        <button aria-label="Easy" type="button" className={styles.__button} onClick={handleEasyClick}>Facile</button>
-        <button aria-label="Medium" type="button" className={styles.__button} onClick={handleMediumClick}>Intermédiaire</button>
-        <button aria-label="Hard" type="button" className={styles.__button} onClick={handleHardClick}>Difficile</button>
-      </div>
       <div className={styles.__gameSection}>
-        <div id={styles.__gameSection}></div>
-        {visibility && <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>}
+        <div className={styles.__buttons}>
+          <button aria-label="Easy" type="button" className={styles.__button} onClick={handleEasyClick}>Facile</button>
+          <button aria-label="Medium" type="button" className={styles.__button} onClick={handleMediumClick}>Intermédiaire</button>
+          <button aria-label="Hard" type="button" className={styles.__button} onClick={handleHardClick}>Difficile</button>
+        </div>
+        <div className={styles.__gameBar}>
+          <p></p>
+        </div>
+        <div className={styles.__gameSection}>
+          <div className={styles.__gameData}>
+            <div className={styles.__flagNb} id="flagNb"></div>
+            <div id="timer"></div>
+          </div>
+          <div id={styles.__gameSection}></div>
+          {visibility && <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>}
+        </div>
       </div>
-    </div>
     </>
   );
 }
