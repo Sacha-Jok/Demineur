@@ -5,27 +5,31 @@ const Game = () => {
 
   const [difficulty, setDifficulty] = useState('');
   const [visibility, setVisibility] = useState(false);
-  const [gridClick, setgridClick] = useState(true);
-
+  const [win, setWin] = useState(false);
 
   const game = document.getElementById(styles.__gameSection);
 
-  const handleEasyClick = () => {setDifficulty({caseNb:9,mineNb:10})};
-  const handleMediumClick = () => {setDifficulty({caseNb:16,mineNb:40})};
-  const handleHardClick = () => {setDifficulty({caseNb:22,mineNb:99})};
-  const handleReplayClick = () => {
-    start(); 
-    setVisibility(false);
-    setgridClick(true);
-  };
+  const handleEasyClick = () => {setDifficulty({caseNb:9,mineNb:2}); stopTime()};
+  const handleMediumClick = () => {setDifficulty({caseNb:16,mineNb:40}); stopTime()};
+  const handleHardClick = () => {setDifficulty({caseNb:22,mineNb:99}); stopTime()};
+  const handleReplayClick = () => {start(); setVisibility(false)};
+
+  
 
   let randoms = [];
+    
   const start = () => {
+    stopTime();
+    setVisibility(false);
+    setWin(false);
+    
     let lvl = difficulty;
     const caseNb = lvl.caseNb, dim = caseNb * caseNb;
     game.style.width = caseNb * 27 + 'px';
     const mineNb = lvl.mineNb;
     game.innerHTML = '';
+    document.getElementById("flagNb").innerHTML = "💣 " + mineNb;
+    document.getElementById("timer").innerHTML = "0 🕑";
 
     /*Création des grilles en fonction de la difficulté sélectionnée*/
     for (let i = 0; i < dim; i++) {
@@ -43,8 +47,6 @@ const Game = () => {
       }
     }
 
-    console.log(randoms)
-    if (gridClick) {
       /*Ecoute du clic de l'utilisateur*/
       game.onclick = (e) => {
         if (!e.target.id.startsWith('case')) return;
@@ -55,10 +57,10 @@ const Game = () => {
 
       /* Detection clic droit pour ajouter le drapeau */
       game.oncontextmenu = (e) => {
-        e.preventDefault();
         if (!e.target.id.startsWith('case')) return;
+        e.preventDefault();
+        startTime();
         setFlag(e);
-      };
     }
   }
 
@@ -72,7 +74,7 @@ const Game = () => {
       min++;
       sec=0;
     };
-    document.getElementById("timer").innerHTML = (min ? (min + " : ") : "") + (sec < 10 ? "0" : "") + sec;
+    document.getElementById("timer").innerHTML = (min ? (min + " : ") : "") + sec + " 🕑";
   };
   
   const startTime = () => {
@@ -107,13 +109,11 @@ const Game = () => {
   };
 
   const checkWin = () => {
-    console.log(flags)
-    console.log(randoms)
-
     if (randoms.every(e => {return flags.includes(e)})) {
-      stopTime()
-      alert("gagné")
+      stopTime();
+      setWin(true);
     }
+
   }
 
   const revealCase = (divNumber, randoms, caseNb, dim) => {
@@ -185,16 +185,20 @@ const Game = () => {
           <button aria-label="Medium" type="button" className={styles.__button} onClick={handleMediumClick}>Intermédiaire</button>
           <button aria-label="Hard" type="button" className={styles.__button} onClick={handleHardClick}>Difficile</button>
         </div>
-        <div className={styles.__gameBar}>
-          <p></p>
-        </div>
-        <div className={styles.__gameSection}>
           <div className={styles.__gameData}>
             <div className={styles.__flagNb} id="flagNb"></div>
             <div id="timer"></div>
           </div>
+        <div className={styles.__gameSection}>
           <div id={styles.__gameSection}></div>
-          {visibility && <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>}
+          {win && <div className={styles.__winBar}>
+            <p>Vous avez gagné !</p>
+            <button aria-label="Rejouer" type="button" id={styles.__winReplay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>
+          </div>}
+          {visibility && <div className={styles.__buttonOverlay}>
+            <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>
+          </div>
+          }
         </div>
       </div>
     </>
