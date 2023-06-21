@@ -1,11 +1,14 @@
 import styles from "./styles.module.scss";
 import { useEffect, useState } from "react";
 
+
 const Game = () => {
 
-  const [difficulty, setDifficulty] = useState('');
+  const [difficulty, setDifficulty] = useState();
   const [visibility, setVisibility] = useState(false);
   const [win, setWin] = useState(false);
+  const [time, setTime] = useState();
+  const [mine, setMine] = useState();
 
   const game = document.getElementById(styles.__gameSection);
 
@@ -26,10 +29,12 @@ const Game = () => {
     let lvl = difficulty;
     const caseNb = lvl.caseNb, dim = caseNb * caseNb;
     game.style.width = caseNb * 27 + 'px';
+    document.getElementById("gameContainer").style.width = caseNb * 27 + 'px';
+
     const mineNb = lvl.mineNb;
     game.innerHTML = '';
-    document.getElementById("flagNb").innerHTML = "💣 " + mineNb;
-    document.getElementById("timer").innerHTML = "0 🕑";
+    setMine("💣 " + mineNb);
+    setTime("0 🕑");
 
     /*Création des grilles en fonction de la difficulté sélectionnée*/
     for (let i = 0; i < dim; i++) {
@@ -48,7 +53,7 @@ const Game = () => {
     }
 
       /*Ecoute du clic de l'utilisateur*/
-      game.onclick = (e) => {
+      game.onclick = (e, props) => {
         if (!e.target.id.startsWith('case')) return;
         startTime();
         const divNumber = parseInt(e.target.id.substring(4));
@@ -56,7 +61,7 @@ const Game = () => {
       };
 
       /* Detection clic droit pour ajouter le drapeau */
-      game.oncontextmenu = (e) => {
+      game.oncontextmenu = (e, props) => {
         if (!e.target.id.startsWith('case')) return;
         e.preventDefault();
         startTime();
@@ -74,11 +79,14 @@ const Game = () => {
       min++;
       sec=0;
     };
-    document.getElementById("timer").innerHTML = (min ? (min + " : ") : "") + sec + " 🕑";
+    setTime((min ? (min + " : ") : "") + (sec < 10 && min ? "0" : "") + sec + " 🕑");
   };
   
   const startTime = () => {
     if (!interval) interval = setInterval(chrono, 1000);
+    window.addEventListener("unload", () => {
+      stopTime();
+    });
   };
 
   const stopTime = () => {
@@ -105,10 +113,10 @@ const Game = () => {
       flags.splice(flags.indexOf(flagDiv),1);
       targetElement.innerHTML = "";
     }
-    document.getElementById("flagNb").innerHTML = "💣 " + Math.max(difficulty.mineNb - flagNb, 0) 
+    setMine("💣 " + Math.max(difficulty.mineNb - flagNb, 0));
   };
 
-  const checkWin = () => {
+  const checkWin = props => {
     if (randoms.every(e => {return flags.includes(e)})) {
       stopTime();
       setWin(true);
@@ -179,28 +187,29 @@ const Game = () => {
   
   return (
     <>
-      <div className={styles.__gameSection}>
+     <div className={styles.__gameSection}>
         <div className={styles.__buttons}>
           <button aria-label="Easy" type="button" className={styles.__button} onClick={handleEasyClick}>Facile</button>
           <button aria-label="Medium" type="button" className={styles.__button} onClick={handleMediumClick}>Intermédiaire</button>
           <button aria-label="Hard" type="button" className={styles.__button} onClick={handleHardClick}>Difficile</button>
         </div>
-          <div className={styles.__gameData}>
-            <div className={styles.__flagNb} id="flagNb"></div>
-            <div id="timer"></div>
-          </div>
-        <div className={styles.__gameSection}>
-          <div id={styles.__gameSection}></div>
-          {win && <div className={styles.__winBar}>
+        {win && <div className={styles.__winBar}>
             <p>Vous avez gagné !</p>
             <button aria-label="Rejouer" type="button" id={styles.__winReplay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>
-          </div>}
-          {visibility && <div className={styles.__buttonOverlay}>
-            <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>
+        </div>}
+        <div id="gameContainer">
+          <div className={styles.__gameData}>
+            <div className={styles.__mineNb}>{mine}</div>
+            <div className={styles.time}>{time}</div>
           </div>
-          }
+          <div className={styles.__gameSection}>
+            <div id={styles.__gameSection}></div>
+            {visibility && <div className={styles.__buttonOverlay}>
+              <button aria-label="Rejouer" type="button" id={styles.__replay} className={styles.__button} onClick={handleReplayClick}>Rejouer</button>
+            </div>}
+          </div>
         </div>
-      </div>
+    </div>
     </>
   );
 }

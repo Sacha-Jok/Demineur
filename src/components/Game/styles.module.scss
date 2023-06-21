@@ -34,11 +34,11 @@
     & .__gameData {
         display: flex;
         justify-content: space-between;
-        width: 20em;
+        margin-bottom: 1em;
     }
 
     & .__winBar {
-        height: 0px;
+        height: auto;
     }
 
     & .__buttonOverlay {
