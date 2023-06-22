@@ -7,14 +7,19 @@ const Game = () => {
   const [difficulty, setDifficulty] = useState();
   const [visibility, setVisibility] = useState(false);
   const [win, setWin] = useState(false);
-  const [time, setTime] = useState();
-  const [mine, setMine] = useState();
+  const [mine, setMine] = useState('');
 
   const game = document.getElementById(styles.__gameSection);
 
-  const handleEasyClick = () => {setDifficulty({caseNb:9,mineNb:2}); stopTime()};
-  const handleMediumClick = () => {setDifficulty({caseNb:16,mineNb:40}); stopTime()};
-  const handleHardClick = () => {setDifficulty({caseNb:22,mineNb:99}); stopTime()};
+  const handleEasyClick = () => {
+    setDifficulty({caseNb:9,mineNb:2});
+  };
+  const handleMediumClick = () => {
+    setDifficulty({caseNb:16,mineNb:40});
+  };
+  const handleHardClick = () => {
+    setDifficulty({caseNb:22,mineNb:99});
+  };
   const handleReplayClick = () => {start(); setVisibility(false)};
 
   
@@ -22,9 +27,9 @@ const Game = () => {
   let randoms = [];
     
   const start = () => {
-    stopTime();
     setVisibility(false);
     setWin(false);
+    setTime(0)
     
     let lvl = difficulty;
     const caseNb = lvl.caseNb, dim = caseNb * caseNb;
@@ -34,7 +39,7 @@ const Game = () => {
     const mineNb = lvl.mineNb;
     game.innerHTML = '';
     setMine("💣 " + mineNb);
-    setTime("0 🕑");
+    //setTime("0 🕑");
 
     /*Création des grilles en fonction de la difficulté sélectionnée*/
     for (let i = 0; i < dim; i++) {
@@ -55,7 +60,7 @@ const Game = () => {
       /*Ecoute du clic de l'utilisateur*/
       game.onclick = (e, props) => {
         if (!e.target.id.startsWith('case')) return;
-        startTime();
+        if (!isRunning) {startTime()};
         const divNumber = parseInt(e.target.id.substring(4));
         revealCase(divNumber, randoms, caseNb, dim);
       };
@@ -63,15 +68,37 @@ const Game = () => {
       /* Detection clic droit pour ajouter le drapeau */
       game.oncontextmenu = (e, props) => {
         if (!e.target.id.startsWith('case')) return;
+        if (!isRunning) {startTime()};
         e.preventDefault();
-        startTime();
         setFlag(e);
     }
   }
 
-  let sec = 0;
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    let intervalId;
+    if (isRunning) {
+      intervalId = setInterval(() => setTime(time + 1), 1000)
+      console.log(time)
+    }
+    return () => clearInterval(intervalId);
+  }, [isRunning, time]);
+
+  const startTime = () => {
+    setIsRunning(true);
+  }
+  const stopTime = () => {
+    setIsRunning(false);
+  }
+  
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+
+  /*let sec = 0;
   let min = 0;
-  let interval = '';
+  const [inter, setInter] = useState(null);
   
   const chrono = () => {
     sec++;
@@ -83,16 +110,18 @@ const Game = () => {
   };
   
   const startTime = () => {
-    if (!interval) interval = setInterval(chrono, 1000);
-    window.addEventListener("unload", () => {
-      stopTime();
-    });
+    if (!inter) {
+      const interId = setInterval(chrono, 1000);
+      setInter(interId);
+    }
+    console.log(inter)
   };
 
   const stopTime = () => {
-    clearInterval(interval);
-    interval = '';
-  };
+    console.log("stoptime")
+    clearInterval(inter);
+    setInter(null);
+  };*/
 
   /*Ajout des drapeaux au clic */
   let flagNb = 0;
@@ -116,12 +145,10 @@ const Game = () => {
     setMine("💣 " + Math.max(difficulty.mineNb - flagNb, 0));
   };
 
-  const checkWin = props => {
+  const checkWin = () => {
     if (randoms.every(e => {return flags.includes(e)})) {
-      stopTime();
       setWin(true);
     }
-
   }
 
   const revealCase = (divNumber, randoms, caseNb, dim) => {
@@ -183,6 +210,7 @@ const Game = () => {
     if (difficulty) {
       start();
     }
+  // eslint-disable-next-line
   }, [difficulty]);
   
   return (
@@ -200,7 +228,7 @@ const Game = () => {
         <div id="gameContainer">
           <div className={styles.__gameData}>
             <div className={styles.__mineNb}>{mine}</div>
-            <div className={styles.time}>{time}</div>
+            <div className={styles.__time}>{minutes} : {seconds.toString().padStart(2, "0")}</div>
           </div>
           <div className={styles.__gameSection}>
             <div id={styles.__gameSection}></div>
