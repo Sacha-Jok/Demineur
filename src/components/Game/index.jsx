@@ -29,6 +29,7 @@ const Game = () => {
   const start = () => {
     setVisibility(false);
     setWin(false);
+    stopTime();
     setTime(0)
     
     let lvl = difficulty;
@@ -228,7 +229,7 @@ const Game = () => {
         <div id="gameContainer">
           <div className={styles.__gameData}>
             <div className={styles.__mineNb}>{mine}</div>
-            <div className={styles.__time}>{minutes} : {seconds.toString().padStart(2, "0")}</div>
+            <div className={styles.__time}>{minutes ? `${minutes} : ` : ""}{seconds ? `${seconds.toString().padStart(2, "0")} 🕑` : ""}</div>          
           </div>
           <div className={styles.__gameSection}>
             <div id={styles.__gameSection}></div>
