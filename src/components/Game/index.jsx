@@ -75,6 +75,8 @@ const Game = () => {
     }
   }
 
+  /* Chronomètre */
+
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -96,33 +98,6 @@ const Game = () => {
   
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
-
-  /*let sec = 0;
-  let min = 0;
-  const [inter, setInter] = useState(null);
-  
-  const chrono = () => {
-    sec++;
-    if (sec === 60) {
-      min++;
-      sec=0;
-    };
-    setTime((min ? (min + " : ") : "") + (sec < 10 && min ? "0" : "") + sec + " 🕑");
-  };
-  
-  const startTime = () => {
-    if (!inter) {
-      const interId = setInterval(chrono, 1000);
-      setInter(interId);
-    }
-    console.log(inter)
-  };
-
-  const stopTime = () => {
-    console.log("stoptime")
-    clearInterval(inter);
-    setInter(null);
-  };*/
 
   /*Ajout des drapeaux au clic */
   let flagNb = 0;
@@ -148,6 +123,7 @@ const Game = () => {
 
   const checkWin = () => {
     if (randoms.every(e => {return flags.includes(e)})) {
+      stopTime();
       setWin(true);
     }
   }
